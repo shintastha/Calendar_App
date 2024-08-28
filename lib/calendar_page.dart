@@ -49,80 +49,76 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text('Calendar App'),
-      ),
-      body: _events.isNotEmpty
-          ? Container(
-              padding: const EdgeInsets.all(8),
-              child: SfCalendar(
-                showDatePickerButton: true,
-                // showNavigationArrow: true,
-                view: CalendarView.month,
-                initialSelectedDate: DateTime.now(),
-                controller: _calendarController,
-                allowedViews: const [
-                  CalendarView.month,
-                  CalendarView.week,
-                ],
-                dataSource: GoogleDataSource(_events),
-                monthViewSettings: const MonthViewSettings(
-                  appointmentDisplayMode:
-                      MonthAppointmentDisplayMode.appointment,
-                  showAgenda: true,
-                ),
-                onTap: (CalendarTapDetails details) {
-                  if (details.targetElement == CalendarElement.calendarCell) {
-                    final DateTime selectedDate = details.date!;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddEventPage(
-                          accessToken: widget.accessToken,
-                          selectedDate: selectedDate,
-                        ),
-                      ),
-                    ).then((_) {
-                      _fetchEvents();
-                    });
-                  } else if (details.appointments != null &&
-                      details.appointments!.isNotEmpty) {
-                    final appointment =
-                        details.appointments!.first as Map<String, dynamic>;
-                    print('Clicked Appointment: $appointment');
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AppointmentDetailsPage(
-                          appointment: appointment,
-                          accessToken: widget.accessToken,
-                        ),
-                      ),
-                    ).then((_) {
-                      _fetchEvents();
-                    });
-                  }
-                },
-              ),
-            )
-          : const Center(
-              child: CircularProgressIndicator(),
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: const Text('Calendar App'),
+        ),
+        body: Container(
+          padding: const EdgeInsets.all(8),
+          child: SfCalendar(
+            showDatePickerButton: true,
+            // showNavigationArrow: true,
+            view: CalendarView.month,
+            initialSelectedDate: DateTime.now(),
+            controller: _calendarController,
+            allowedViews: const [
+              CalendarView.month,
+              CalendarView.week,
+            ],
+            dataSource: GoogleDataSource(_events),
+            monthViewSettings: const MonthViewSettings(
+              appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
+              showAgenda: true,
             ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //         builder: (context) =>
-      //             AddEventPage(accessToken: widget.accessToken, selectedDate: null,),
-      //       ),
-      //     ).then((_) {
-      //       _fetchEvents();
-      //     });
-      //   },
-      //   child: const Icon(Icons.add),
-      // ),
-    );
+            onTap: (CalendarTapDetails details) {
+              if (details.targetElement == CalendarElement.calendarCell) {
+                final DateTime selectedDate = details.date!;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddEventPage(
+                      accessToken: widget.accessToken,
+                      selectedDate: selectedDate,
+                    ),
+                  ),
+                ).then((_) {
+                  _fetchEvents();
+                });
+              } else if (details.appointments != null &&
+                  details.appointments!.isNotEmpty) {
+                final appointment =
+                    details.appointments!.first as Map<String, dynamic>;
+                print('Clicked Appointment: $appointment');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AppointmentDetailsPage(
+                      appointment: appointment,
+                      accessToken: widget.accessToken,
+                    ),
+                  ),
+                ).then((_) {
+                  _fetchEvents();
+                });
+              }
+            },
+          ),
+        )
+
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) =>
+        //             AddEventPage(accessToken: widget.accessToken, selectedDate: null,),
+        //       ),
+        //     ).then((_) {
+        //       _fetchEvents();
+        //     });
+        //   },
+        //   child: const Icon(Icons.add),
+        // ),
+        );
   }
 }
